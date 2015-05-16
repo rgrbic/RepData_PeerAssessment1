@@ -40,7 +40,10 @@ The resulting total number of steps taken each day is presented as a histogram:
 
 ```r
 library(ggplot2)
-qplot(stepsPerDay, main = "Total number of steps taken each day (NA removed)", xlab = "Daily steps", binwidth = 1000)
+qplot(stepsPerDay,
+      main = "Total number of steps taken each day (NA removed)",
+      xlab = "Daily steps",
+      binwidth = 1000)
 ```
 
 ![](PA1_template_files/figure-html/stepsPerDayHistogram-1.png) 

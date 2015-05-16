@@ -45,7 +45,10 @@ medianStepsPerDay <- median(stepsPerDay)
 The resulting total number of steps taken each day is presented as a histogram:
 ```{r stepsPerDayHistogram, echo = TRUE}
 library(ggplot2)
-qplot(stepsPerDay, main = "Total number of steps taken each day (NA removed)", xlab = "Daily steps", binwidth = 1000)
+qplot(stepsPerDay,
+      main = "Total number of steps taken each day (NA removed)",
+      xlab = "Daily steps",
+      binwidth = 1000)
 ```
 
 The mean of the total number of steps taken per day is: **`r meanStepsPerDay`**.  
