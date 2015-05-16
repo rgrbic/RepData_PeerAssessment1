@@ -1,14 +1,5 @@
----
-title: 'Reproducible Research: Peer Assessment 1'
-output:
-  html_document:
-    keep_md: yes
----
-```{r setOptions, echo = FALSE}
-#set options for values printing
-library(ggplot2)
-options(scipen=1, digits=2)
-```
+# Reproducible Research: Peer Assessment 1
+
 
 This assignment makes use of data from a personal activity monitoring device.
 This device collects data at 5 minute intervals through out the day.
@@ -19,12 +10,14 @@ taken in 5 minute intervals each day.
 
 ## Loading and preprocessing the data
 At first, the data should be loaded:
-```{r dataLoad, echo = TRUE}
+
+```r
 rm(list=ls())
 data <- read.csv2("activity.csv", sep = ",")
 ```
 and then the second column is transformed to more appropriate "Date" class:
-```{r dataTransform, echo = TRUE}
+
+```r
 data[,2] <- as.Date(data[,2],"%Y-%m-%d")
 ```
 <br>
@@ -32,7 +25,8 @@ data[,2] <- as.Date(data[,2],"%Y-%m-%d")
 
 ## What is mean total number of steps taken per day?
 First the total number of steps taken per day is calculated in the following way:
-```{r stepsPerDay, echo = TRUE}
+
+```r
 #remove missing values
 temp <- data[!is.na(data$steps),]
 #calculate sum of steps per day
@@ -43,32 +37,42 @@ medianStepsPerDay <- median(stepsPerDay)
 ```
 
 The resulting total number of steps taken each day is presented as a histogram:
-```{r stepsPerDayHistogram, echo = TRUE}
+
+```r
 library(ggplot2)
 qplot(stepsPerDay, main = "Total number of steps taken each day (NA removed)", xlab = "Daily steps", binwidth = 1000)
 ```
 
-The mean of the total number of steps taken per day is: **`r meanStepsPerDay`**.  
-The median of the total number of steps taken per day: **`r medianStepsPerDay`**.
+![](PA1_template_files/figure-html/stepsPerDayHistogram-1.png) 
+
+The mean of the total number of steps taken per day is: **10766.19**.  
+The median of the total number of steps taken per day: **10765**.
 
 
 These values are very similar to those obtained by summary function:
-```{r stepsPerDaySummary, echo = TRUE}
+
+```r
 summary(stepsPerDay)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    8840   10800   10800   13300   21200
 ```
 <br>
 
 
 ## What is the average daily activity pattern?
 The average number of steps per 5 minute interval can be calculated as follows:
-```{r averageDaily, echo = TRUE}
+
+```r
 #number of steps per 5 minute interval, averaged across days
 meanStepsPerInterval <- tapply(temp$steps, temp$interval, mean)
-
 ```
 
 The time series plot can be the constructed using ggplot library:
-```{r averageDailyPlot, echo = TRUE}
+
+```r
 #create new data frame (first column - index, second column - average value)
 totalNumberOfIntPerDay <- 60/5 * 24
 dataInterval <- data.frame(interval = 1:totalNumberOfIntPerDay, value=meanStepsPerInterval)
@@ -93,21 +97,37 @@ g + geom_point(col = "red", size=2) +
     labs(title = "Time series plot of averaged number of steps in 5 minute interval")
 ```
 
-As can be seen from the plot, the maximum value of averaged number of steps per 5 minute interval is **`r round(maxMeanStepsPerInterval)`** number of steps (rounded) which occurs in **`r maxInterval`**th 5 minute interval, which (if the measurements of each day starts at 00:00) corresponds to the time between **`r maxHours`:`r maxMinute-5`** and **`r maxHours`:`r maxMinute`**.
+![](PA1_template_files/figure-html/averageDailyPlot-1.png) 
+
+As can be seen from the plot, the maximum value of averaged number of steps per 5 minute interval is **206** number of steps (rounded) which occurs in **104**th 5 minute interval, which (if the measurements of each day starts at 00:00) corresponds to the time between **8:35** and **8:40**.
 <br>
 
 
 ## Imputing missing values
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r missingValues, echo = TRUE}
+
+```r
 noNA <- sum(is.na(data))
 ```
-According to the calculation, the total number of missing values is **`r noNA`**. The same result is obtained with summary function
-```{r missingValuesSummary, echo = TRUE}
+According to the calculation, the total number of missing values is **2304**. The same result is obtained with summary function
+
+```r
 summary(data)
 ```
+
+```
+##      steps           date               interval   
+##  Min.   :  0    Min.   :2012-10-01   Min.   :   0  
+##  1st Qu.:  0    1st Qu.:2012-10-16   1st Qu.: 589  
+##  Median :  0    Median :2012-10-31   Median :1178  
+##  Mean   : 37    Mean   :2012-10-31   Mean   :1178  
+##  3rd Qu.: 12    3rd Qu.:2012-11-15   3rd Qu.:1766  
+##  Max.   :806    Max.   :2012-11-30   Max.   :2355  
+##  NA's   :2304
+```
 The missing values are filled with the appropriate mean value (i.e. average value of that 5 minute interval). 
-```{r fillMissingValues, echo = TRUE}
+
+```r
 #copy data frame
 dataFilled <- data
 
@@ -127,13 +147,27 @@ medianStepsPerDayFilled <- median(stepsPerDayFilled)
 #check that there is no missing values
 summary(dataFilled)
 ```
+
+```
+##      steps          date               interval   
+##  Min.   :  0   Min.   :2012-10-01   Min.   :   0  
+##  1st Qu.:  0   1st Qu.:2012-10-16   1st Qu.: 589  
+##  Median :  0   Median :2012-10-31   Median :1178  
+##  Mean   : 37   Mean   :2012-10-31   Mean   :1178  
+##  3rd Qu.: 27   3rd Qu.:2012-11-15   3rd Qu.:1766  
+##  Max.   :806   Max.   :2012-11-30   Max.   :2355
+```
 Now, with imputed missing variables, the histogram of total numbers of steps take each day look like this:
-```{r stepsPerDayHistogramFilled, echo = TRUE}
+
+```r
 qplot(stepsPerDayFilled, main = "Total number of steps taken each day", xlab = "Daily steps", binwidth = 1000)
 ```
 
-With the imputed missing variables, the mean of the total number of steps taken per day is **`r I(meanStepsPerDayFilled)`** while the median of the total number of steps taken per day: **`r medianStepsPerDayFilled`**. The difference between mean values is **`r meanStepsPerDay - meanStepsPerDayFilled`**, the difference between median values is **`r I(medianStepsPerDay - medianStepsPerDayFilled)`**. The following histogram compares the total number of steps taken each day when NAs are imputed and when they are ignored:
-```{r stepsPerDayHistogramCompare, echo = TRUE}
+![](PA1_template_files/figure-html/stepsPerDayHistogramFilled-1.png) 
+
+With the imputed missing variables, the mean of the total number of steps taken per day is **10766.19** while the median of the total number of steps taken per day: **10766.19**. The difference between mean values is **0**, the difference between median values is **-1.19**. The following histogram compares the total number of steps taken each day when NAs are imputed and when they are ignored:
+
+```r
 stepsPerDayy <- tapply(data$steps, data$date, sum, na.rm = FALSE)
 dat <- data.frame(val = c(stepsPerDayy,stepsPerDayFilled), dataset = factor(rep(c("NA ignored","imputed"),each=length(stepsPerDayy))))
 ggplot(dat, aes(x=val, fill=dataset)) +
@@ -141,16 +175,20 @@ ggplot(dat, aes(x=val, fill=dataset)) +
     labs(x = "Daily steps") +
     labs(title = "Total number of steps taken each day")
 ```
+
+![](PA1_template_files/figure-html/stepsPerDayHistogramCompare-1.png) 
 <br>
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 Additional column is added, which classifies the day as *weekday* or *weekend*:
-```{r patternsDays, echo = TRUE}
+
+```r
 dataFilled$FactorDay <- as.factor(ifelse(weekdays(dataFilled$date)  %in% c("subota","nedjelja"), "Weekend", "Weekday"))
 ```
 Now, the panel plot can be created which has averaged number of steps per 5 minute interval, for both, weekdays and weekend.
-```{r makePanelPlot, echo = TRUE}
+
+```r
 averageIntervalDays <- with(dataFilled, tapply(steps, list(interval, FactorDay), mean))
 dataDays <- data.frame(xint = rep(1:length(averageIntervalDays),2), 
                        stepsDay = c(averageIntervalDays[,1],averageIntervalDays[,2]),
@@ -160,8 +198,9 @@ ggplot(dataDays, aes(xint, stepsDay)) +
     facet_wrap(~factorVar, nrow = 2) +
     labs(y = "Average number of steps per 5 minute interval") +
     labs(x = "5 minute interval")
-
 ```
+
+![](PA1_template_files/figure-html/makePanelPlot-1.png) 
 
 
 
