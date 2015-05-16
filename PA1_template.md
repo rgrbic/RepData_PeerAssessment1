@@ -192,9 +192,10 @@ Now, the panel plot can be created which has averaged number of steps per 5 minu
 
 ```r
 averageIntervalDays <- with(dataFilled, tapply(steps, list(interval, FactorDay), mean))
-dataDays <- data.frame(xint = rep(1:length(averageIntervalDays),2), 
+noIntervals <- dim(averageIntervalDays)
+dataDays <- data.frame(xint = rep(1:noIntervals[1],2), 
                        stepsDay = c(averageIntervalDays[,1],averageIntervalDays[,2]),
-                       factorVar = rep(c("Weekday","Weekend"),each = length(averageIntervalDays)))
+                       factorVar = rep(c("Weekday","Weekend"),each = noIntervals[1]))
 ggplot(dataDays, aes(xint, stepsDay)) +
     geom_line(color = "steelblue") +
     facet_wrap(~factorVar, nrow = 2) +
