@@ -79,9 +79,11 @@ data &lt;- read.csv2(&quot;activity.csv&quot;, sep = &quot;,&quot;)</code></pre>
 <p>First the total number of steps taken per day is calculated in the following way:</p>
 <pre class="r"><code>#remove missing values
 temp &lt;- data[!is.na(data$steps),]
+
 #calculate sum of steps per day
 stepsPerDay &lt;- tapply(temp$steps, temp$date, sum)
-#calcultae mean and median of daily number of steps
+
+#calculate mean and median of daily number of steps
 meanStepsPerDay &lt;- mean(stepsPerDay)
 medianStepsPerDay &lt;- median(stepsPerDay)</code></pre>
 <p>The resulting total number of steps taken each day is presented as a histogram:</p>
