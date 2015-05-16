@@ -35,9 +35,11 @@ First the total number of steps taken per day is calculated in the following way
 ```{r stepsPerDay, echo = TRUE}
 #remove missing values
 temp <- data[!is.na(data$steps),]
+
 #calculate sum of steps per day
 stepsPerDay <- tapply(temp$steps, temp$date, sum)
-#calcultae mean and median of daily number of steps
+
+#calculate mean and median of daily number of steps
 meanStepsPerDay <- mean(stepsPerDay)
 medianStepsPerDay <- median(stepsPerDay)
 ```
