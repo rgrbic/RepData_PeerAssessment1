@@ -135,7 +135,9 @@ qplot(stepsPerDayFilled, main = "Total number of steps taken each day", xlab = "
 With the imputed missing variables, the mean of the total number of steps taken per day is **`r I(meanStepsPerDayFilled)`** while the median of the total number of steps taken per day: **`r medianStepsPerDayFilled`**. The difference between mean values is **`r meanStepsPerDay - meanStepsPerDayFilled`**, the difference between median values is **`r I(medianStepsPerDay - medianStepsPerDayFilled)`**. The following histogram compares the total number of steps taken each day when NAs are imputed and when they are ignored:
 ```{r stepsPerDayHistogramCompare, echo = TRUE}
 stepsPerDayy <- tapply(data$steps, data$date, sum, na.rm = FALSE)
-dat <- data.frame(val = c(stepsPerDayy,stepsPerDayFilled), dataset = factor(rep(c("NA ignored","imputed"),each=length(stepsPerDayy))))
+dat <- data.frame(val = c(stepsPerDayy,stepsPerDayFilled),
+                  dataset = factor(rep(c("NA ignored","imputed"),each=length(stepsPerDayy))))
+
 ggplot(dat, aes(x=val, fill=dataset)) +
     geom_histogram(binwidth=1000, alpha=.5, position="identity") +
     labs(x = "Daily steps") +

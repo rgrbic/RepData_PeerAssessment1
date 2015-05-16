@@ -169,7 +169,9 @@ With the imputed missing variables, the mean of the total number of steps taken 
 
 ```r
 stepsPerDayy <- tapply(data$steps, data$date, sum, na.rm = FALSE)
-dat <- data.frame(val = c(stepsPerDayy,stepsPerDayFilled), dataset = factor(rep(c("NA ignored","imputed"),each=length(stepsPerDayy))))
+dat <- data.frame(val = c(stepsPerDayy,stepsPerDayFilled),
+                  dataset = factor(rep(c("NA ignored","imputed"),each=length(stepsPerDayy))))
+
 ggplot(dat, aes(x=val, fill=dataset)) +
     geom_histogram(binwidth=1000, alpha=.5, position="identity") +
     labs(x = "Daily steps") +
